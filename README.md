@@ -15,7 +15,10 @@ ssh into jabujabu
 $ ssh jabujabu.local
 ```
 
+Build and start a docker machine
+```
 $ brew install docker docker-compose docker-machine libyaml
 $ brew cask install virtualbox
 $ docker-machine create --driver virtualbox default
 $ eval "$(docker-machine env default)"
+```
