@@ -15,25 +15,37 @@ ssh into jabujabu
 $ ssh jabujabu.local
 ```
 
-Generate a new ssh key pair. Add the public key to github.
+install homebrew. this will pull down Command Line Tools as well
+```
+$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+
+install docker
+```
+$ brew install docker docker-compose docker-machine libyaml
+$ brew cask install virtualbox
+```
+
+create a docker machine, and configure virtualbox to forward the port
+```
+$ docker-machine create --driver virtualbox default
+$ docker-machine stop default
+$ vboxmanage modifyvm default --natpf1 'http,tcp,,8080,,8080'
+$ docker-machine start default
+$ eval "$(docker-machine env default)"
+```
+
+generate a new ssh key pair. Add the public key to github.
 ```
 $ ssh-keygen -t rsa
 ```
 
-Clone down this repo
+clone down this repo, and step into it
 ```
 $ git clone git@github.com:thomastodon/jabujabu.git
 ```
 
-Install docker. Build and start a docker machine
-```
-$ brew install docker docker-compose docker-machine libyaml
-$ brew cask install virtualbox
-$ docker-machine create --driver virtualbox default
-$ eval "$(docker-machine env default)"
-```
-
-Generate keys
+generate keys
 ```
 $ mkdir -p keys/web keys/worker
 $ ssh-keygen -t rsa -f ./keys/web/tsa_host_key -N ''
@@ -46,3 +58,5 @@ $ cp ./keys/web/tsa_host_key.pub ./keys/worker
 ```
 docker-compose up
 ```
+
+Assign jabujabu a static IP, and go see the concourse GUI on port 8080 from a networked workstation.
