@@ -23,7 +23,7 @@ $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/inst
 install docker:
 ```
 $ brew install docker docker-compose docker-machine libyaml
-$ brew cask install virtualbox
+$ brew cask install virtualbox fly
 ```
 
 create a docker machine, and configure virtualbox to forward the port:
