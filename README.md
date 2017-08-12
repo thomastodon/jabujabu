@@ -1,62 +1,40 @@
 ## jabujabu
+Deploying concourse to [Google Container Engine](https://cloud.google.com/container-engine/)
 
-from **jabujabu**, enable ssh:
+Get tools:
 ```
-$ sudo systemsetup -setremotelogin on
-```
-
-from the client, copy your keys over to **jabujabu**:
-```
-$ ssh-copy-id jabujabu.local
+$ brew cask install google-cloud-sdk
+$ brew install kubernetes-helm kubernetes-cli
 ```
 
-ssh into **jabujabu**:
+Create a container cluster:
 ```
-$ ssh jabujabu.local
-```
-
-install homebrew. this will pull down Command Line Tools as well:
-```
-$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+$ gcloud container clusters create concourse
 ```
 
-install docker:
+Authenticate `kubectl` with your cluster:
 ```
-$ brew install docker docker-compose docker-machine libyaml
-$ brew cask install virtualbox fly
-```
-
-create a docker machine, and configure virtualbox to forward the port:
-```
-$ docker-machine create --driver virtualbox default
-$ docker-machine stop default
-$ vboxmanage modifyvm default --natpf1 'http,tcp,,8080,,8080'
-$ docker-machine start default
-$ eval "$(docker-machine env default)"
+$ gcloud auth application-default login
 ```
 
-generate a new ssh key pair. Add the public key to github:
+Install the Tiller server on your cluster:
 ```
-$ ssh-keygen -t rsa
-```
-
-clone down this repo, and step into it:
-```
-$ git clone git@github.com:thomastodon/jabujabu.git
+$ helm init
 ```
 
-generate keys:
+Install the [concourse helm chart](https://github.com/kubernetes/charts/tree/master/stable/concourse):
 ```
-$ mkdir -p keys/web keys/worker
-$ ssh-keygen -t rsa -f ./keys/web/tsa_host_key -N ''
-$ ssh-keygen -t rsa -f ./keys/web/session_signing_key -N ''
-$ ssh-keygen -t rsa -f ./keys/worker/worker_key -N ''
-$ cp ./keys/worker/worker_key.pub ./keys/web/authorized_worker_keys
-$ cp ./keys/web/tsa_host_key.pub ./keys/worker
+$ helm install --name concourse stable/concourse
 ```
 
+Create a load balancer that exposes the deployment:
 ```
-$ docker-compose up
+$ kubectl expose deployment concourse-web --type=LoadBalancer --name=concourse-load-balancer
 ```
 
-Assign **jabujabu** a static IP, and go see the concourse GUI on port 8080 from a networked workstation.
+Get the `EXTERNAL-IP` of the load balancer:
+```
+$ kubectl get service concourse-load-balancer
+```
+
+Navigate to the ATC UI at: `http://<EXTERNAL-IP>:8080`
