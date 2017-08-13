@@ -4,7 +4,7 @@ Deploying concourse to [Google Container Engine](https://cloud.google.com/contai
 Get tools:
 ```
 $ brew cask install google-cloud-sdk
-$ brew install kubernetes-helm kubernetes-cli
+$ brew install kubernetes-helm kubernetes-cli certbot
 ```
 
 Create a container cluster:
@@ -22,19 +22,26 @@ Install the Tiller server on your cluster:
 $ helm init
 ```
 
-Install the [concourse helm chart](https://github.com/kubernetes/charts/tree/master/stable/concourse):
+Generate a cert [manually](https://certbot.eff.org/docs/using.html#manual):
 ```
-$ helm install --name concourse stable/concourse
+$ sudo certbot certonly --manual --preferred-challenges dns -d jabujabu.tk
 ```
 
-Create a load balancer that exposes the deployment:
+Create a secret from that cert:
 ```
-$ kubectl expose deployment concourse-web --type=LoadBalancer --name=concourse-load-balancer
+$ kubectl create secret tls concourse-web-tls --cert=/etc/letsencrypt/live/jabujabu.tk/cert.pem --key=/etc/letsencrypt/live/jabujabu.tk/privkey.pem
+```
+
+Install the [concourse helm chart](https://github.com/kubernetes/charts/tree/master/stable/concourse):
+```
+$ helm install --name concourse -f values.yml stable/concourse
 ```
 
 Get the `EXTERNAL-IP` of the load balancer:
 ```
-$ kubectl get service concourse-load-balancer
+$ kubectl get ingress concourse-web
 ```
 
-Navigate to the ATC UI at: `http://<EXTERNAL-IP>:8080`
+Update the value of DNS entry for jabujabu.tk to `<EXTERNAL-IP>`
+
+Navigate to the ATC UI at: https://jabujabu.tk

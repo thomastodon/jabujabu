@@ -1,0 +1,26 @@
+## Configuration values for Concourse Web components.
+##
+web:
+
+  ## Ingress configuration.
+  ## ref: https://kubernetes.io/docs/user-guide/ingress/
+  ##
+  ingress:
+
+    ## Enable ingress.
+    ##
+    enabled: true
+
+    ## Hostnames.
+    ## Must be provided if Ingress is enabled.
+    ##
+    hosts:
+      - jabujabu.tk
+
+    ## TLS configuration.
+    ## Secrets must be manually created in the namespace.
+    ##
+    tls:
+      - secretName: concourse-web-tls
+        hosts:
+          - jabujabu.tk
