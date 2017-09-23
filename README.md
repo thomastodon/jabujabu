@@ -1,40 +1,20 @@
 ## jabujabu
-Deploying concourse to [Google Container Engine](https://cloud.google.com/container-engine/)
+Deploying concourse to [Google Compute Engine](https://cloud.google.com/compute/)
 
 Get tools:
 ```
-$ brew cask install google-cloud-sdk
-$ brew install kubernetes-helm kubernetes-cli
+brew cask install google-cloud-sdk
 ```
 
-Create a container cluster:
+Set some environment variables for the project:
 ```
-$ gcloud container clusters create concourse
-```
-
-Authenticate `kubectl` with your cluster:
-```
-$ gcloud auth application-default login
+export projectid=jabujabu-id
+export region=us-central1
+export zone=us-central1-a
+export zone2=us-central1-b
 ```
 
-Install the Tiller server on your cluster:
+SSH onto the bastion VM:
 ```
-$ helm init
+gcloud compute ssh bosh-bastion-concourse
 ```
-
-Install the [concourse helm chart](https://github.com/kubernetes/charts/tree/master/stable/concourse):
-```
-$ helm install --name concourse stable/concourse
-```
-
-Create a load balancer that exposes the deployment:
-```
-$ kubectl expose deployment concourse-web --type=LoadBalancer --name=concourse-load-balancer
-```
-
-Get the `EXTERNAL-IP` of the load balancer:
-```
-$ kubectl get service concourse-load-balancer
-```
-
-Navigate to the ATC UI at: `http://<EXTERNAL-IP>:8080`

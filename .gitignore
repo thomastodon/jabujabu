@@ -1,2 +1,14 @@
 keys
+
+# Google Cloud Platform
 gcp-credentials.json
+
+# Intellij
+.idea
+
+# Terraform
+*.tfstate
+*.tfstate.*.backup
+*.tfstate.backup
+.terraform/
+terraform.tfvars
