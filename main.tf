@@ -1,28 +1,3 @@
-variable "projectid" {
-  type = "string"
-  default = "jabujabu-id"
-}
-
-variable "region" {
-  type = "string"
-  default = "us-central1"
-}
-
-variable "zone-1" {
-  type = "string"
-  default = "us-central1-a"
-}
-
-variable "zone-2" {
-  type = "string"
-  default = "us-central1-b"
-}
-
-variable "name" {
-  type = "string"
-  default = "concourse"
-}
-
 provider "google" {
   project = "${var.projectid}"
   region = "${var.region}"
@@ -95,8 +70,10 @@ resource "google_compute_instance" "bosh-bastion" {
     "bosh-internal"
   ]
 
-  disk {
-    image = "ubuntu-1404-trusty-v20160627"
+  boot_disk {
+    initialize_params {
+      image = "ubuntu-1404-trusty-v20160627"
+    }
   }
 
   network_interface {

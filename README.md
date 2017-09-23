@@ -14,6 +14,11 @@ export zone=us-central1-a
 export zone2=us-central1-b
 ```
 
+Terraform the bosh director
+```
+terraform apply
+```
+
 SSH onto the bastion VM:
 ```
 gcloud compute ssh bosh-bastion-concourse
