@@ -11,4 +11,5 @@ gcp-credentials.json
 *.tfstate.*.backup
 *.tfstate.backup
 .terraform/
+.terraform.*
 terraform.tfvars

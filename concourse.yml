@@ -16,16 +16,15 @@ director_uuid: <%= director_uuid %>
 
 releases:
 - name: concourse
-  version: 2.5.0
+  version: 3.5.0
 - name: garden-runc
-  version: 1.0.3
+  version: 1.6.0
 
 instance_groups:
 - name: web
   instances: 1
   vm_type: common
-  azs: [z1,z2]
-  vm_extensions: [concourse-lb]
+  azs: [z1, z2]
   stemcell: trusty
   networks:
   - name: public
