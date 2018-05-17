@@ -14,12 +14,6 @@ resource "google_dns_managed_zone" "thomasshoulerio" {
   name = "thomasshoulerio"
   dns_name = "thomasshouler.io."
   description = "thomasshouler.io"
-  name_servers = [
-    "ns-cloud-e1.googledomains.com",
-    "ns-cloud-e2.googledomains.com",
-    "ns-cloud-e3.googledomains.com",
-    "ns-cloud-e4.googledomains.com",
-  ]
 }
 
 resource "google_dns_record_set" "concourse" {
